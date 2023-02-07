@@ -8,6 +8,14 @@ const routes = [
     component: HomeView
   },
   {
+    path: '/register',
+    name: 'register',
+    // route level code-splitting
+    // this generates a separate chunk (register.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "register" */ '../views/RegisterView.vue')
+  },
+  {
     path: '/rogin',
     name: 'rogin',
     // route level code-splitting
