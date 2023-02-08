@@ -2,12 +2,20 @@
 import { supabase } from "../supabase";
 import { ref } from "vue";
 
-const tasks = ref([]);
-const getTasks = async () => {
+const datas = ref([]);
+const getItems = async () => {
   let { data: items } = await supabase.from("items").select("*");
-  tasks.value = items;
+  datas.value = items;
 };
-getTasks();
+getItems();
+
+const addCart = async (itemId) => {
+  let { data:carts } = await supabase
+  .from('carts')
+  .insert([
+    { users: '2', items: itemId },
+  ])
+};
 
 </script>
 
@@ -16,13 +24,13 @@ getTasks();
     <p>商品一覧</p>
     <ul>
       <li
-        v-for="task in tasks"
-        :key="task.id"
-        :style="task.completed ? 'text-decoration:line-through' : ''"
+        v-for="item in datas"
+        :key="item.id"
+        :style="item.completed ? 'text-decoration:line-through' : ''"
       >
-        <span><input type="checkbox" v-model="task.completed" /></span>
-        <span>{{ task.itemName }}</span>
-        <button>追加</button>
+        <span><input type="checkbox" v-model="item.completed" /></span>
+        <span>{{ item.itemName }}</span>
+        <button @click="addCart(item.id)">追加</button>
       </li>
     </ul>
   </div>

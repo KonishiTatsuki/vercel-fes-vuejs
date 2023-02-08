@@ -5,6 +5,7 @@
 
 <template>
   <nav>
+    <router-link to="/register">Register</router-link> |
     <router-link to="/rogin">Rogin</router-link> |
     <router-link to="/">Home</router-link> |
     <router-link to="/cart">Cart</router-link> |
