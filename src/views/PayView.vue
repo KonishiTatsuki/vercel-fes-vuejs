@@ -6,8 +6,8 @@ const datas = ref([]);
 const getCarts = async () => {
   let { data: carts } = await supabase
     .from("carts")
-    .select("*")
-    .eq("userId", "5");
+    .select("*,users(*),items(*)")
+    .eq("users", "2");
   datas.value = carts;
 };
 getCarts();
@@ -16,7 +16,7 @@ const paydelete = async (userId) => {
   const { data:carts } = await supabase
   .from('carts')
   .delete()
-  .eq("userId", userId);
+  .eq("users", userId);
   datas.value = carts;
 };
 
@@ -32,9 +32,9 @@ const paydelete = async (userId) => {
         :key="cart.id"
         :style="cart.completed ? 'text-decoration:line-through' : ''"
       >
-        <span>{{ cart.itemId }}</span>
+        <span>{{ cart.items.itemName }}</span>
       </li>
     </ul>
-    <button @click="paydelete(5)">決済</button>
+    <button @click="paydelete(datas[0].users.id)">決済</button>
   </div>
 </template>

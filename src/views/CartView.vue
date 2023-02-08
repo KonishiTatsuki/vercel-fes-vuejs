@@ -9,16 +9,15 @@ const getCarts = async () => {
     .select("*,items(*)")
     .eq("users", "2");
   datas.value = carts;
-  console.log(carts)
+
 };
 getCarts();
 
 const deleteCart = async (itemId) => {
-  const { data:carts } = await supabase
+  await supabase
   .from('carts')
   .delete()
   .eq("items", itemId);
-  console.log(carts);
 };
 
 </script>
