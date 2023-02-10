@@ -1,40 +1,46 @@
-<script setup>
-import { supabase } from "../supabase";
-import { ref } from "vue";
-
-const datas = ref([]);
-const getCarts = async () => {
-  let { data: carts } = await supabase
-    .from("carts")
-    .select("*,users(*),items(*)")
-    .eq("users", "2");
-  datas.value = carts;
+<script>
+import { StripeCheckout } from '@vue-stripe/vue-stripe';
+export default {
+  components: {
+    StripeCheckout,
+  },
+  data () {
+    this.publishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
+    return {
+      loading: false,
+      lineItems: [
+        {
+          price: '300', // The id of the one-time price you created in your Stripe dashboard
+          quantity: 1,
+        },
+      ],
+      successURL: '/',
+      cancelURL: '/pay',
+    };
+  },
+  methods: {
+    submit () {
+      // You will be redirected to Stripe's secure checkout page
+      this.$refs.checkoutRef.redirectToCheckout();
+    },
+  },
 };
-getCarts();
-
-const paydelete = async (userId) => {
-  const { data:carts } = await supabase
-  .from('carts')
-  .delete()
-  .eq("users", userId);
-  datas.value = carts;
-};
-
-
 </script>
 
 <template>
   <div class="about">
-    <h1>決済</h1>
-    <ul>
-      <li
-        v-for="cart in datas"
-        :key="cart.id"
-        :style="cart.completed ? 'text-decoration:line-through' : ''"
-      >
-        <span>{{ cart.items.itemName }}</span>
-      </li>
-    </ul>
-    <button @click="paydelete(datas[0].users.id)">決済</button>
+    <p>決済</p>
+    <div>
+      <stripe-checkout
+        ref="checkoutRef"
+        mode="payment"
+        :pk="publishableKey"
+        :line-items="lineItems"
+        :success-url="successURL"
+        :cancel-url="cancelURL"
+        @loading="(v) => (loading = v)"
+      />
+      <button @click="submit">Pay now!</button>
+    </div>
   </div>
 </template>
