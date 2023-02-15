@@ -33,6 +33,12 @@ const deleteCart = async (itemId) => {
     .delete()
     .eq("users", cookieUserId)
     .eq("items", itemId);
+
+  // ボタンの切り替え(削除 → 追加)
+  await supabase
+    .from("items")
+    .update({ bottonSwitch: false })
+    .eq("id", itemId);
 };
 </script>
 
