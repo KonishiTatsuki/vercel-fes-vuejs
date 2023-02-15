@@ -1,14 +1,18 @@
 <script setup>
 import { supabase } from "../supabase";
-import { ref, computed } from "vue";
+import { ref } from "vue";
+// import { ref, computed } from "vue";
 import { useCookies } from "vue3-cookies";
 import { useRouter } from "vue-router";
+// import {computed} from "./HomeView.vue"
 
 const datas = ref([]);
 const user = ref({
   mailAddress: "",
   password: "",
 });
+//エラーメッサージ表示・非表示
+const error = ref(false);
 const { cookies } = useCookies();
 const router = useRouter();
 
@@ -26,28 +30,34 @@ const checkUser = async () => {
     .eq("password", user.value.password);
 
   if (checkUser[0]) {
-    const aaaa = computed(() => {
-      const cookie = ref({
-        cookieUserId: "",
-        cookieUserName: "",
-      });
-      console.log("computedの中");
-      cookies.set("userId", checkUser[0].id);
-      cookies.set("userName", checkUser[0].userName);
-      cookies.set("isLoggedIn", false);
-      const cookieUserId = cookies.get("userId");
-      const cookieUserName = cookies.get("userName");
-      cookie.value = { cookieUserId: cookieUserId, userName: cookieUserName };
-      return cookie.value;
-    });
-    console.log(aaaa.value);
+    // const aaaa = computed(() => {
+    //   const cookie = ref({
+    //     cookieUserId: "",
+    //     cookieUserName: "",
+    //   });
+    //   console.log("computedの中");
+    //   cookies.set("userId", checkUser[0].id);
+    //   cookies.set("userName", checkUser[0].userName);
+    //   cookies.set("isLoggedIn", false);
+    //   const cookieUserId = cookies.get("userId");
+    //   const cookieUserName = cookies.get("userName");
+    //   cookie.value = { cookieUserId: cookieUserId, userName: cookieUserName };
+    //   return cookie.value;
+    // });
+    // console.log(aaaa.value);
     // const displayNumber = () => {
     //   console.log(aaaa.value);
     // };
     // displayNumber();
+    // computed();
+    cookies.set("userId", checkUser[0].id);
+    cookies.set("userName", checkUser[0].userName);
+    cookies.set("isLoggedIn", false);
     router.push("/");
+    console.log("ログイン");
   } else {
     console.log("エラー");
+    error.value = true;
     router.push("/rogin");
   }
 };
@@ -67,6 +77,8 @@ const checkUser = async () => {
             <input type="text" v-model="user.password" />
           </li>
         </ul>
+        <p v-show="error">※メールアドレスまたはパスワードが間違っています</p>
+        <p></p>
         <button
           type="submit"
           class="bg-blue-800 hover:bg-blue-700 text-white rounded px-4 py-2 mb-5"

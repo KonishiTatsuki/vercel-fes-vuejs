@@ -5,23 +5,25 @@ export default {
     StripeCheckout,
   },
   data () {
-    this.publishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
+    // this.publishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
+    this.publishableKey = "pk_test_51MZoEnEW99nNbvF2wfqjn4RN0z4EnGjcHSRB0WZ2VfIgn7n15VycY9GK2kuUxUBDbJjBioBcwHNJeePiJMrJnH68009RZaFnav";
     return {
       loading: false,
       lineItems: [
         {
-          price: '300', // The id of the one-time price you created in your Stripe dashboard
+          price: 'price_1MZoILEW99nNbvF2EZMuZXk5', // The id of the one-time price you created in your Stripe dashboard
           quantity: 1,
         },
       ],
-      successURL: '/',
-      cancelURL: '/pay',
+      successURL: 'http://localhost:8080/success',
+      cancelURL: 'http://localhost:8080/error',
     };
   },
   methods: {
     submit () {
       // You will be redirected to Stripe's secure checkout page
       this.$refs.checkoutRef.redirectToCheckout();
+      // alert("hi world")
     },
   },
 };

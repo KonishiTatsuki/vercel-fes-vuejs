@@ -1,21 +1,19 @@
 <script setup>
 import { useCookies } from "vue3-cookies";
-import { ref, computed } from "vue";
+// import { ref} from "vue";
+import { useRouter } from "vue-router";
 
 const { cookies } = useCookies();
 const cookieUserId = cookies.get("userId");
+const router = useRouter();
 
-const aaaa =  computed(() => {
-  const cookie = ref({
-    userId: "",
-  });
-  cookie.value = {
-    userId: cookieUserId,
-  };
-  // console.log(cookieUserId !== null);
-  return cookieUserId !== null;
-});
-console.log(aaaa.value)
+//ログアウト
+const rogout = () => {
+  cookies.remove("userId");
+  cookies.remove("userName");
+  cookies.remove("isLoggedIn");
+  router.push("/");
+};
 </script>
 
 <template>
@@ -26,7 +24,25 @@ console.log(aaaa.value)
         to="/"
         >Vue3</router-link
       >
-      <div class="space-x-12 font-bold" v-if="!computed">
+      <div class="space-x-12 font-bold" v-if="cookieUserId">
+        <router-link
+          to="/cart"
+          class="hover:text-green-200 transition-all duration-300"
+          >カート</router-link
+        >
+        <router-linkp
+          to="/pay"
+          class="hover:text-green-200 transition-all duration-300"
+          >決済</router-linkp
+        >
+        <a
+          to="/"
+          class="hover:text-green-200 transition-all duration-300"
+          @click="rogout()"
+          >ログアウト</a
+        >
+      </div>
+      <div class="space-x-12 font-bold" v-else>
         <router-link
           to="/cart"
           class="hover:text-green-200 transition-all duration-300"
@@ -37,27 +53,15 @@ console.log(aaaa.value)
           class="hover:text-green-200 transition-all duration-300"
           >決済</router-link
         >
-      </div>
-      <div class="space-x-12 font-bold" v-else>
         <router-link
           to="/Rogin"
           class="hover:text-green-200 transition-all duration-300"
           >ログイン</router-link
         >
-        <router-link
-          to="/cart"
-          class="hover:text-green-200 transition-all duration-300"
-          >カート</router-link
-        >
-        <router-link
-          to="/pay"
-          class="hover:text-green-200 transition-all duration-300"
-          >決済</router-link
-        >
       </div>
     </nav>
   </header>
-  <div>
+  <div class="bg-gray-200">
     <router-view />
   </div>
 </template>
